@@ -46,7 +46,7 @@ de pouvoir relier toutes les villes par un réseau de câble en une distance min
 
 ## Pseudo-Code
 
-![](prim.png){width=500}
+![](images/prim.png){width=500}
 
 ## Code R
 \footnotesize
@@ -89,7 +89,7 @@ Prim = function(X, A) {
 Soit un graphe G avec X la liste de ses sommets et A sa matrice d'adjacence représentée ci-dessous :
 
 ```{r, echo=FALSE, fig.align="center", out.width="150pt"}
-knitr::include_graphics("adj1.png")
+knitr::include_graphics("images/adj1.png")
 ```
 
 ```{r, echo=FALSE}
@@ -130,7 +130,7 @@ artificielle avec notamment l'algorithme A*.
 
 ## Pseudo-Code
 
-![](bellman.png){width=400}
+![](images/bellman.png){width=400}
 
 \newpage
 
@@ -183,7 +183,7 @@ Ford_Bellman = function(vertices, adjacency, source)
 Soit un graphe G avec X la liste de ses sommets et B sa matrice d'adjacence représentée ci-dessous :
 
 ```{r, echo=FALSE, fig.align="center", out.width="150pt"}
-knitr::include_graphics("adj2.png")
+knitr::include_graphics("images/adj2.png")
 ```
 
 ```{r, echo=FALSE}
@@ -208,7 +208,7 @@ Ainsi, peu importe le choix du sommet d'origine, notre algorithme se perd dans c
 Soit un graphe G avec X la liste de ses sommets et C sa matrice d'adjacence représentée ci-dessous :
 
 ```{r, echo=FALSE, fig.align="center", out.width="150pt"}
-knitr::include_graphics("adj3.png")
+knitr::include_graphics("images/adj3.png")
 ```
 
 ```{r, echo=FALSE}
@@ -244,7 +244,7 @@ marchandises que peut contenir un véhicule et la source et le puit seraient les
 
 ## Pseudo-Code
 
-![](fulkerson.png){width=400}
+![](images/fulkerson.png){width=400}
 \newpage
 
 ## Code R
@@ -335,7 +335,7 @@ Ford_Fulkerson = function(vertices, adjacency, src, dst)
 Soit un graphe G avec X la liste de ses sommets, D sa matrice d'adjacence et sa représentation graphique ci-dessous :
 
 ```{r, echo=FALSE, fig.align="center", out.width="150pt"}
-knitr::include_graphics("fig1.png")
+knitr::include_graphics("images/fig1.png")
 ```
 
 ```{r, echo=FALSE}
