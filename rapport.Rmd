@@ -10,13 +10,13 @@ header-includes:
 
 # Présentation
 
-Ce rapport présente le travail que nous avons effectué lors de notre projet, notre objectif étant de traduire le pseudo-code de
+Ce rapport présente le travail que nous avons effectué lors de notre projet, notre objectif était de traduire le pseudo-code de
 plusieurs algorithmes de théorie des graphes en langage R.  
 Il s'agit des algorithmes de _**Prim**_,  de _**Ford-Bellman**_ ainsi que de _**Ford-Fulkerson**_.
 
 - _**Prim**_: Calcul d'un arbre couvrant minimal dans un graphe valué non orienté.  
 - _**Ford-Bellman**_: Calcul des plus courts chemins depuis un sommet source dans un graphe valué orienté.  
-- _**Ford-Fulkerson**_: Calcule le flot maximal d'un graphe à partir d'un sommet source et d'un sommet puit dans un graphe valué orienté.  
+- _**Ford-Fulkerson**_: Calcul du flot maximal d'un graphe à partir d'un sommet source et d'un sommet puit dans un graphe valué orienté.  
 
 
 Pour chaque algorithme vous trouverez une description, un pseudo-code, une implémentation en code R ainsi qu'un ou plusieurs exemples.
@@ -51,7 +51,16 @@ de pouvoir relier toutes les villes par un réseau de câble en une distance min
 ## Code R
 \footnotesize
 ```{r}
-Prim = function(X, A) {
+Prim = function(X, A)
+{
+  "
+  INPUT:
+    X : Liste des sommets du graphe
+    A : Matrice d'adjacence du graphe
+  OUTPUT:
+    visited : Liste chronologique des sommets rajoutés à l'arbre
+    mst : Liste des arêtes de l'arbre couvrant minimal
+  "
   visited = c(sample(X,1)) # Initialisation de la liste des sommets visités par un sommet pris au hasard
   mst = c() # Initialisation de notre Minimum Spanning Tree
   edges = which(A!=0, arr.ind=T) # Récupération des arêtes à partir de notre matrice d'adjacence
@@ -82,13 +91,11 @@ Prim = function(X, A) {
 ```
 \normalsize
 
-\newpage
-
 ## Exemple
 
 Soit un graphe G avec X la liste de ses sommets et A sa matrice d'adjacence représentée ci-dessous :
 
-```{r, echo=FALSE, fig.align="center", out.width="150pt"}
+```{r, echo=FALSE, fig.align="center", out.width="120pt"}
 knitr::include_graphics("images/adj1.png")
 ```
 
@@ -126,13 +133,11 @@ Le problème de plus court chemin est rencontré dans plusieurs domaines égalem
 possible entre deux villes qu'un GPS effectue. Il est également utilisé dans des algorithmes de pathfinding pour l'intelligence
 artificielle avec notamment l'algorithme A*.
 
-\vspace{30pt}
 
 ## Pseudo-Code
 
 ![](images/bellman.png){width=400}
 
-\newpage
 
 ## Code R
 \footnotesize
@@ -144,31 +149,33 @@ Ford_Bellman = function(vertices, adjacency, source)
     vertices : Liste des sommets du graphe
     adjacency : Matrice d'adjacence du graphe
     source : Sommet à partir duquel on calcule les plus courts chemins
+  OUTPUT:
+    dist : Tableau de distances minimales à partir de source
   "
   dist = c()
   end = FALSE
-  edges = which(adjacency!=0, arr.ind=T)
+  edges = which(adjacency!=0, arr.ind=T) # Récupération des arêtes à partir de notre matrice d'adjacence
   
-  for (i in vertices) {
-    dist[i] = Inf
+  for (i in vertices) { # Pour chaque sommet du graphe
+    dist[i] = Inf # On initialise sa distance au sommet source à l'infini
   }
-  dist[source] = 0
+  dist[source] = 0 # On met la distance du sommet source à zéro
   
   while(!end)
   {
-    end = TRUE
+    end = TRUE # Flag utilisé pour arrêter la boucle
     for (i in vertices[-source])
     {
-      pred = unname(edges[which(edges[,'col']==i),'row'])
-      if (length(pred) > 0)
+      pred = unname(edges[which(edges[,'col']==i),'row']) # Liste des prédecesseurs du sommet i
+      if (length(pred) > 0) # Si le sommet a un prédecesseur
       {
-        for (j in pred)
+        for (j in pred) # Pour chaque prédecesseur de i
         {
-          weight = dist[j] + adjacency[j,i]
-          if (weight < dist[i])
+          weight = dist[j] + adjacency[j,i] # On calcule un nouveau poids pour notre sommet i
+          if (weight < dist[i]) # Si le poids est inférieur à son poids actuel
           {
-            dist[i] = weight
-            end = FALSE
+            dist[i] = weight # La distance de i est mise à jour
+            end = FALSE # Si on modifie dist, alors on arrête pas la boucle
           }
         }
       }
@@ -182,7 +189,7 @@ Ford_Bellman = function(vertices, adjacency, source)
 ## Exemple n°1
 Soit un graphe G avec X la liste de ses sommets et B sa matrice d'adjacence représentée ci-dessous :
 
-```{r, echo=FALSE, fig.align="center", out.width="150pt"}
+```{r, echo=FALSE, fig.align="center", out.width="120pt"}
 knitr::include_graphics("images/adj2.png")
 ```
 
@@ -207,7 +214,7 @@ Ainsi, peu importe le choix du sommet d'origine, notre algorithme se perd dans c
 ## Exemple n°2
 Soit un graphe G avec X la liste de ses sommets et C sa matrice d'adjacence représentée ci-dessous :
 
-```{r, echo=FALSE, fig.align="center", out.width="150pt"}
+```{r, echo=FALSE, fig.align="center", out.width="120pt"}
 knitr::include_graphics("images/adj3.png")
 ```
 
@@ -227,7 +234,7 @@ Ford_Bellman(X, C, 7)
 ```
 Ici nous récupérons un tableau qui contient la distance minimale entre le sommet 7 et chacun des autres sommets.  
 Dans ce graphe, l'éxecution ne fonctionne que pour les sommets 6 et 7 puisqu'il y a un cycle de poids negatif entre ces deux sommets : 
-puisque notre sommet source fait partie de ce cycle, l'algorithme n'y passera pas.
+en effet notre sommet source fait partie de ce cycle, l'algorithme n'y passera pas.
 
 \newpage
 # Algorithme de Ford-Fulkerson
@@ -253,6 +260,15 @@ marchandises que peut contenir un véhicule et la source et le puit seraient les
 ```{r}
 Ford_Fulkerson = function(vertices, adjacency, src, dst)
 {
+  "
+  INPUT:
+    vertices : Liste des sommets du graphe
+    adjacency : Matrice d'adjacence du graphe
+    src : Sommet de départ de notre recherche de flot maximal
+    dst : Sommet puit (destination)
+  OUTPUT:
+    maxFlow : Valeur du flot maximal pour les inputs donnés
+  "
   maxFlow = 0 # Maximum flow (return value)
   edges = which(adjacency!=0, arr.ind=T) # Matrix of edges (row->col)
   

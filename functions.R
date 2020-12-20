@@ -1,4 +1,13 @@
-Prim = function(X, A) {
+Prim = function(X, A)
+{
+  "
+  INPUT:
+    X : Liste des sommets du graphe
+    A : Matrice d'adjacence du graphe
+  OUTPUT:
+    visited : Liste chronologique des sommets rajoutés à l'arbre
+    mst : Liste des arêtes de l'arbre couvrant minimal
+  "
   visited = c(sample(X,1)) # Initialisation de la liste des sommets visités par un sommet pris au hasard
   mst = c() # Initialisation de notre Minimum Spanning Tree
   edges = which(A!=0, arr.ind=T) # Récupération des arêtes à partir de notre matrice d'adjacence
@@ -16,7 +25,7 @@ Prim = function(X, A) {
     cursor = c() # Variable utilisée pour contenir notre arête minimale
     for (edge in possible) { # Pour chaque arête possible
       # Si sa valeur est inférieure au minimum stocké, on met le curseur dessus et on change le minimum
-      if (A[edge[1], edge[2]] < minval) { 
+      if (A[edge[1], edge[2]] < minval) {
         minval = A[edge[1], edge[2]]
         cursor = edge
       }
@@ -34,33 +43,33 @@ Ford_Bellman = function(vertices, adjacency, source)
     vertices : Liste des sommets du graphe
     adjacency : Matrice d'adjacence du graphe
     source : Sommet à partir duquel on calcule les plus courts chemins
+  OUTPUT:
+    dist : Tableau de distances minimales à partir de source
   "
   dist = c()
   end = FALSE
-  edges = which(adjacency!=0, arr.ind=T)
+  edges = which(adjacency!=0, arr.ind=T) # Récupération des arêtes à partir de notre matrice d'adjacence
   
-  print(edges)
-  
-  for (i in vertices) {
-    dist[i] = Inf
+  for (i in vertices) { # Pour chaque sommet du graphe
+    dist[i] = Inf # On initialise sa distance au sommet source à l'infini
   }
-  dist[source] = 0
+  dist[source] = 0 # On met la distance du sommet source à zéro
   
   while(!end)
   {
-    end = TRUE
+    end = TRUE # Flag utilisé pour arrêter la boucle
     for (i in vertices[-source])
     {
-      pred = unname(edges[which(edges[,'col']==i),'row'])
-      if (length(pred) > 0)
+      pred = unname(edges[which(edges[,'col']==i),'row']) # Liste des prédecesseurs du sommet i
+      if (length(pred) > 0) # Si le sommet a un prédecesseur
       {
-        for (j in pred)
+        for (j in pred) # Pour chaque prédecesseur de i
         {
-          weight = dist[j] + adjacency[j,i]
-          if (weight < dist[i])
+          weight = dist[j] + adjacency[j,i] # On calcule un nouveau poids pour notre sommet i
+          if (weight < dist[i]) # Si le poids est inférieur à son poids actuel
           {
-            dist[i] = weight
-            end = FALSE
+            dist[i] = weight # La distance de i est mise à jour
+            end = FALSE # Si on modifie dist, alors on arrête pas la boucle
           }
         }
       }
@@ -71,6 +80,15 @@ Ford_Bellman = function(vertices, adjacency, source)
 
 Ford_Fulkerson = function(vertices, adjacency, src, dst)
 {
+  "
+  INPUT:
+    vertices : Liste des sommets du graphe
+    adjacency : Matrice d'adjacence du graphe
+    src : Sommet de départ de notre recherche de flot maximal
+    dst : Sommet puit (destination)
+  OUTPUT:
+    maxFlow : Valeur du flot maximal pour les inputs donnés
+  "
   maxFlow = 0 # Maximum flow (return value)
   edges = which(adjacency!=0, arr.ind=T) # Matrix of edges (row->col)
   
@@ -91,7 +109,8 @@ Ford_Fulkerson = function(vertices, adjacency, src, dst)
       reloadS=FALSE # Flag used to come back here if the S vector has been changed and need to be considered by the for loop
       for (j in setdiff(X,S)) # For each node not in S
       { 
-        iTab = intersect(union(edges[which(edges[,'col']==j), 'row'], edges[which(edges[,'row']==j), 'col']), S) # Store all of j's neighbours that are in S
+        # Store all of j's neighbours that are in S
+        iTab = intersect(union(edges[which(edges[,'col']==j), 'row'], edges[which(edges[,'row']==j), 'col']), S) 
         for (i in iTab) # For each vertex in iTab
         { 
           cij = adjacency[i,j] # cij is the edge capacity
@@ -121,10 +140,12 @@ Ford_Fulkerson = function(vertices, adjacency, src, dst)
         }
         if(stop | reloadS) {break} # Flags IF statement
       }
-      if(identical(S, S_cache)) {break} else {S_cache=S} # If S hasn't changed between 2 iterations, it means we couldn't reach the destination, so we exit
+      # If S hasn't changed between 2 iterations, it means we couldn't reach the destination, so we exit
+      if(identical(S, S_cache)) {break} else {S_cache=S} 
       if(stop) {break} # Flags IF statement
     }
     
+    # Second part of the pseudo-code, updating our edges flow and retracing path
     if (dst %in% S) # If our destination is in S
     {
       while(j != src)
@@ -142,5 +163,3 @@ Ford_Fulkerson = function(vertices, adjacency, src, dst)
   }
   return(maxFlow)
 }
-
-
