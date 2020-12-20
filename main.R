@@ -24,7 +24,7 @@ B5 = c( 0,-2, 5, 0, 0, 0, 3)
 B6 = c( 0, 0, 2, 0, 0, 0,-3)
 B7 = c( 0, 0, 0, 7, 3,-3, 0)
 B = rbind(B1,B2,B3,B4,B5,B6,B7)
-#Ford_Bellman(X, B, sample(X,1)) La fonction tourne en boucle sur cet exemple à cause du cycle négatif
+Ford_Bellman(X, B, sample(X,1)) # La fonction tourne en boucle sur cet exemple à cause du cycle négatif
 
 X =  c( 1, 2, 3, 4, 5, 6, 7)
 C1 = c( 0, 5, 8, 0, 0, 0, 0)

@@ -39,6 +39,8 @@ Ford_Bellman = function(vertices, adjacency, source)
   end = FALSE
   edges = which(adjacency!=0, arr.ind=T)
   
+  print(edges)
+  
   for (i in vertices) {
     dist[i] = Inf
   }
